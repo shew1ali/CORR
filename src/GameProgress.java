@@ -32,30 +32,34 @@ public class GameProgress implements Serializable {
 
     public void saveGame(String address, GameProgress gameProgress) {
         try {
-            File files = new File("D://Games/savegames/players.txt");
+            File files = new File(address);
         } catch (Exception e) {
             System.err.println(e);
         }
         try (
-                FileOutputStream fos = new FileOutputStream("players.txt");
+                FileOutputStream fos = new FileOutputStream(address);
                 ObjectOutputStream oos = new ObjectOutputStream(fos)) {
             oos.writeObject(gameProgress);
         } catch (IOException e) {
-            System.err.println(e);;
+            System.err.println(e);
+            ;
         }
     }
-    public void zipFiles(String address, GameProgress gameProgress) throws FileNotFoundException {
-        try (ZipOutputStream zout = new ZipOutputStream(new
-                FileOutputStream("zip_output.zip"));
-             FileInputStream fis = new FileInputStream("players.txt")) {
-            ZipEntry entry = new ZipEntry("packed_notes.txt");
-            zout.putNextEntry(entry);
-            byte[] buffer = new byte[fis.available()];
-            fis.read(buffer);
-            zout.write(buffer);
-            zout.closeEntry();
-        } catch (Exception ex) {
-            System.out.println(ex.getMessage());
-        }
+
+    public static void zipFiles(String address, List<String> adressList) throws FileNotFoundException {
+        for (String arr : adressList) {
+            try (ZipOutputStream zout = new ZipOutputStream(new
+                    FileOutputStream(address));
+                 FileInputStream fis = new FileInputStream(arr)) {
+                ZipEntry entry = new ZipEntry("packed_notes.txt");
+                zout.putNextEntry(entry);
+                byte[] buffer = new byte[fis.available()];
+                fis.read(buffer);
+                zout.write(buffer);
+                zout.closeEntry();
+            } catch (Exception ex) {
+                System.out.println(ex.getMessage());
+            }
         }
     }
+}
