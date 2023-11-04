@@ -29,8 +29,7 @@ public class GameProgress implements Serializable {
                 ", distance=" + distance +
                 '}';
     }
-
-    public void saveGame(String address, GameProgress gameProgress) {
+    public void saveGame(String address) {
         try {
             File files = new File(address);
         } catch (Exception e) {
@@ -39,7 +38,7 @@ public class GameProgress implements Serializable {
         try (
                 FileOutputStream fos = new FileOutputStream(address);
                 ObjectOutputStream oos = new ObjectOutputStream(fos)) {
-            oos.writeObject(gameProgress);
+            oos.writeObject(this);
         } catch (IOException e) {
             System.err.println(e);
             ;
@@ -51,7 +50,7 @@ public class GameProgress implements Serializable {
             try (ZipOutputStream zout = new ZipOutputStream(new
                     FileOutputStream(address));
                  FileInputStream fis = new FileInputStream(arr)) {
-                ZipEntry entry = new ZipEntry("packed_notes.txt");
+                ZipEntry entry = new ZipEntry(new File(fis.toString()).getName());
                 zout.putNextEntry(entry);
                 byte[] buffer = new byte[fis.available()];
                 fis.read(buffer);
